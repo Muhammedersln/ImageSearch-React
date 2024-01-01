@@ -1,25 +1,32 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { createContext, useState } from 'react'
+import Jumbutron from './components/Jumbutron'
+import SearchField from './components/SearchField'
+import Images from './components/Images'
+import useAxios from './hooks/useAxios'
+export const ImageContext =createContext();
 
-function App() {
+const App = () => {
+  const[searchImage, setSearchImage] = useState('');
+
+  const { response, isLoading, error, fetchData } = useAxios(`search/photos?page=1&query=cars&client_id=${process.env.REACT_APP_ACCESS_KEY}`);
+  const value={
+    response,
+    isLoading,
+    error,
+    fetchData,
+    searchImage,
+    setSearchImage
+  }
+
+  console.log(response)
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <ImageContext.Provider value={value}>
+      <Jumbutron>
+        <SearchField></SearchField>
+      </Jumbutron>
+      <Images></Images>
+    </ImageContext.Provider>
+  )
 }
 
-export default App;
+export default App
